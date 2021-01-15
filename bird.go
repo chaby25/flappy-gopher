@@ -13,7 +13,9 @@ type bird struct {
 	time int
 	textures []*sdl.Texture
 	dead bool
-	y,speed float64
+	x,y int32
+	width,height int32
+	speed float64
 }
 
 const (
@@ -32,7 +34,14 @@ func newBird(renderer *sdl.Renderer) (*bird, error) {
 		textures = append(textures,texture)
 	}
 
-	return &bird{textures: textures, y:300, speed: 0},nil
+	return &bird{
+		textures: textures,
+		x: 10,
+		y:300,
+		width: 50,
+		height: 43,
+		speed: 0,
+	},nil
 }
 
 func (bird *bird) isDead() bool {
@@ -46,7 +55,7 @@ func (bird *bird) update ()  {
 	defer bird.mu.Unlock()
 
 	bird.time++
-	bird.y -= bird.speed
+	bird.y -= int32(bird.speed)
 	if bird.y < 0 {
 		bird.speed = -bird.speed
 		bird.y = 0
@@ -59,7 +68,12 @@ func (bird *bird) paint (renderer *sdl.Renderer) error {
 	bird.mu.RLock()
 	defer bird.mu.RUnlock()
 
-	rect := &sdl.Rect{X:10,Y: (600 - int32(bird.y)) - 43/2,W:50,H:43}
+	rect := &sdl.Rect{
+		X:bird.x,
+		Y: (600 - bird.y) - bird.height/2,
+		W:bird.width,
+		H:bird.height,
+	}
 	i := bird.time/10 % len(bird.textures)
 	if err := renderer.Copy(bird.textures[i] , nil, rect); err != nil {
 		return fmt.Errorf("Could not copy Background: %v", err)
