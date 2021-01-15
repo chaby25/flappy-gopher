@@ -120,13 +120,13 @@ func (bird *bird) touch(pipe *pipe) {
 		return
 	}
 
-	if pipe.height < bird.y - bird.height/2 {
+	if !pipe.inverted && pipe.height < bird.y - bird.height/2 {
+		return
+	}
+
+	if pipe.inverted && 600-pipe.height > bird.y+bird.height/2 {
 		return
 	}
 
 	bird.dead = true
-
-
-
-
 }

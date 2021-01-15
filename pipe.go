@@ -30,7 +30,7 @@ func newPipe(renderer *sdl.Renderer) (*pipe,error) {
 		height:300,
 		width: 50,
 		speed: 1,
-		inverted: false,
+		inverted: true,
 	},nil
 }
 
@@ -44,8 +44,13 @@ func (pipe *pipe) paint(renderer *sdl.Renderer) error {
 		W: pipe.width,
 		H: pipe.height,
 	}
+	flip := sdl.FLIP_NONE
+	if pipe.inverted {
+		rect.Y = 0
+		flip = sdl.FLIP_VERTICAL
+	}
 
-	if err := renderer.Copy(pipe.texture , nil, rect); err != nil {
+	if err := renderer.CopyEx(pipe.texture,nil,rect,0,nil,flip); err != nil {
 		return fmt.Errorf("Could not copy pipe: %v", err)
 	}
 
