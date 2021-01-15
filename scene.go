@@ -85,7 +85,7 @@ func (scene *scene) handleEvent(event sdl.Event) bool {
 func (scene *scene) update()  {
 	scene.bird.update()
 	scene.pipe.update()
-
+	scene.bird.touch(scene.pipe)
 }
 
 func (scene *scene) paint(renderer *sdl.Renderer) error {

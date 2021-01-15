@@ -105,3 +105,28 @@ func (bird *bird) jump() {
 
 	bird.speed = -jumpSpeed
 }
+
+func (bird *bird) touch(pipe *pipe) {
+	bird.mu.Lock()
+	defer bird.mu.Unlock()
+	pipe.mu.RLock()
+	defer pipe.mu.RUnlock()
+
+	if pipe.x > bird.x + bird.width { //check right
+		return
+	}
+
+	if pipe.x + pipe.width < bird.x { //check left
+		return
+	}
+
+	if pipe.height < bird.y - bird.height/2 {
+		return
+	}
+
+	bird.dead = true
+
+
+
+
+}
