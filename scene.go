@@ -43,7 +43,13 @@ func (scene *scene) run(events <-chan sdl.Event, renderer *sdl.Renderer) chan er
 			case e:= <-events:
 				done = scene.handleEvent(e)
 			case <-tick:
-					if err := scene.paint(renderer) ; err != nil {
+				scene.update()
+				if scene.bird.isDead() {
+					drawTitle(renderer,"Game Over")
+					time.Sleep(time.Second)
+					scene.restart()
+				}
+				if err := scene.paint(renderer) ; err != nil {
 						errc <- err
 				}
 			}
@@ -53,6 +59,9 @@ func (scene *scene) run(events <-chan sdl.Event, renderer *sdl.Renderer) chan er
 	return errc
 }
 
+func (scene *scene) restart() {
+	scene.bird.restart()
+}
 func (scene *scene) handleEvent(event sdl.Event) bool {
 	switch event.(type) {
 	case *sdl.QuitEvent:
@@ -63,6 +72,10 @@ func (scene *scene) handleEvent(event sdl.Event) bool {
 			log.Printf("Uknown Event: %T",event)
 	}
 	return false
+}
+
+func (scene *scene) update()  {
+	scene.bird.update()
 }
 
 func (scene *scene) paint(renderer *sdl.Renderer) error {
