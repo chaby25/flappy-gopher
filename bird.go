@@ -13,7 +13,10 @@ type bird struct {
 	y,speed float64
 }
 
-const gravity = 0.1
+const (
+	gravity = 0.1
+	jumpSpeed = -5
+)
 
 func newBird(renderer *sdl.Renderer) (*bird, error) {
 	var textures []*sdl.Texture
@@ -50,4 +53,8 @@ func (bird *bird) destroy() {
 	for _,bird := range bird.textures {
 		bird.Destroy()
 	}
+}
+
+func (bird *bird) jump() {
+	bird.speed = jumpSpeed
 }

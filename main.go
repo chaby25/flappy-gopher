@@ -61,7 +61,6 @@ func run() error{
 		}
 	}
 
-//	return <-scene.run(events,renderer)
 }
 
 func drawTitle(renderer *sdl.Renderer) error {
