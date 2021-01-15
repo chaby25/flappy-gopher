@@ -12,7 +12,7 @@ type scene struct {
 	time int
 	bg *sdl.Texture
 	bird *bird
-	pipe *pipe
+	pipes *pipes
 }
 
 func newScene(renderer *sdl.Renderer) (*scene, error) {
@@ -27,14 +27,14 @@ func newScene(renderer *sdl.Renderer) (*scene, error) {
 		return nil,err
 	}
 
-	pipe, err := newPipe(renderer)
+	pipes, err := newPipes(renderer)
 	if err != nil {
 		return nil,err
 	}
 
 
 
-	return &scene{bg:bg, bird:bird, pipe:pipe} ,nil
+	return &scene{bg:bg, bird:bird, pipes:pipes} ,nil
 }
 
 func (scene *scene) run(events <-chan sdl.Event, renderer *sdl.Renderer) chan error {
@@ -67,7 +67,7 @@ func (scene *scene) run(events <-chan sdl.Event, renderer *sdl.Renderer) chan er
 
 func (scene *scene) restart() {
 	scene.bird.restart()
-	scene.pipe.restart()
+	scene.pipes.restart()
 
 }
 func (scene *scene) handleEvent(event sdl.Event) bool {
@@ -84,8 +84,8 @@ func (scene *scene) handleEvent(event sdl.Event) bool {
 
 func (scene *scene) update()  {
 	scene.bird.update()
-	scene.pipe.update()
-	scene.bird.touch(scene.pipe)
+	scene.pipes.update()
+	scene.pipes.touch(scene.bird)
 }
 
 func (scene *scene) paint(renderer *sdl.Renderer) error {
@@ -100,7 +100,7 @@ func (scene *scene) paint(renderer *sdl.Renderer) error {
 		return fmt.Errorf("Error rendering bird: %v",err)
 	}
 
-	if err := scene.pipe.paint(renderer) ; err != nil {
+	if err := scene.pipes.paint(renderer) ; err != nil {
 		return fmt.Errorf("Error rendering pipe: %v",err)
 	}
 
@@ -111,5 +111,5 @@ func (scene *scene) paint(renderer *sdl.Renderer) error {
 func (s *scene) destroy() {
 	s.bg.Destroy()
 	s.bird.destroy()
-	s.pipe.destroy()
+	s.pipes.destroy()
 }

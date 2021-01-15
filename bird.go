@@ -109,8 +109,6 @@ func (bird *bird) jump() {
 func (bird *bird) touch(pipe *pipe) {
 	bird.mu.Lock()
 	defer bird.mu.Unlock()
-	pipe.mu.RLock()
-	defer pipe.mu.RUnlock()
 
 	if pipe.x > bird.x + bird.width { //check right
 		return
